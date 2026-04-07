@@ -69,17 +69,6 @@ chmod 600 "$USER_HOME/.ssh/authorized_keys"
 
 chown -R "$USERNAME:$USERNAME" "$USER_HOME/.ssh"
 
-# SSH настройка
-USER_HOME=$(eval echo "~$USERNAME")
-
-mkdir -p "$USER_HOME/.ssh"
-echo "$SSH_KEY" > "$USER_HOME/.ssh/authorized_keys"
-
-chmod 700 "$USER_HOME/.ssh"
-chmod 600 "$USER_HOME/.ssh/authorized_keys"
-
-chown -R "$USERNAME:$USERNAME" "$USER_HOME/.ssh"
-
 echo "=== Настройка SSH ==="
 
 SSHD_CONFIG="/etc/ssh/sshd_config"
