@@ -69,6 +69,37 @@ chmod 600 "$USER_HOME/.ssh/authorized_keys"
 
 chown -R "$USERNAME:$USERNAME" "$USER_HOME/.ssh"
 
+# SSH настройка
+USER_HOME=$(eval echo "~$USERNAME")
+
+mkdir -p "$USER_HOME/.ssh"
+echo "$SSH_KEY" > "$USER_HOME/.ssh/authorized_keys"
+
+chmod 700 "$USER_HOME/.ssh"
+chmod 600 "$USER_HOME/.ssh/authorized_keys"
+
+chown -R "$USERNAME:$USERNAME" "$USER_HOME/.ssh"
+
+echo "=== Настройка SSH ==="
+
+SSHD_CONFIG="/etc/ssh/sshd_config"
+
+sed -i 's/^#\?PubkeyAuthentication.*/PubkeyAuthentication yes/' "$SSHD_CONFIG"
+sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' "$SSHD_CONFIG"
+sed -i 's/^#\?KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/' "$SSHD_CONFIG"
+sed -i 's/^#\?ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/' "$SSHD_CONFIG"
+sed -i 's/^#\?UsePAM.*/UsePAM yes/' "$SSHD_CONFIG"
+sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' "$SSHD_CONFIG"
+
+grep -q '^PubkeyAuthentication yes$' "$SSHD_CONFIG" || echo 'PubkeyAuthentication yes' >> "$SSHD_CONFIG"
+grep -q '^PasswordAuthentication no$' "$SSHD_CONFIG" || echo 'PasswordAuthentication no' >> "$SSHD_CONFIG"
+grep -q '^KbdInteractiveAuthentication no$' "$SSHD_CONFIG" || echo 'KbdInteractiveAuthentication no' >> "$SSHD_CONFIG"
+grep -q '^ChallengeResponseAuthentication no$' "$SSHD_CONFIG" || echo 'ChallengeResponseAuthentication no' >> "$SSHD_CONFIG"
+grep -q '^UsePAM yes$' "$SSHD_CONFIG" || echo 'UsePAM yes' >> "$SSHD_CONFIG"
+grep -q '^PermitRootLogin no$' "$SSHD_CONFIG" || echo 'PermitRootLogin no' >> "$SSHD_CONFIG"
+
+sshd -t && systemctl restart ssh || systemctl restart sshd
+
 # Sudo доступ
 read -p "Добавить в sudo группу? (y/n): " SUDO
 if [[ "$SUDO" == "y" || "$SUDO" == "Y" ]]; then
