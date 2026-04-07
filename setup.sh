@@ -56,7 +56,7 @@ fi
 useradd -m -s /bin/bash "$USERNAME"
 
 # Установка пароля
-echo "$USERNAME:$PASSWORD" | chpasswd
+echo -e "$PASSWORD\n$PASSWORD" | passwd "$USERNAME"
 
 # SSH настройка
 USER_HOME=$(eval echo "~$USERNAME")
