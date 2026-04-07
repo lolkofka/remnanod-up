@@ -73,6 +73,7 @@ echo "=== Настройка SSH ==="
 
 SSHD_CONFIG="/etc/ssh/sshd_config"
 
+sed -i 's/^#\?Port.*/Port 22/' "$SSHD_CONFIG"
 sed -i 's/^#\?PubkeyAuthentication.*/PubkeyAuthentication yes/' "$SSHD_CONFIG"
 sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' "$SSHD_CONFIG"
 sed -i 's/^#\?KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/' "$SSHD_CONFIG"
@@ -80,6 +81,7 @@ sed -i 's/^#\?ChallengeResponseAuthentication.*/ChallengeResponseAuthentication 
 sed -i 's/^#\?UsePAM.*/UsePAM yes/' "$SSHD_CONFIG"
 sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' "$SSHD_CONFIG"
 
+grep -q '^Port 22$' "$SSHD_CONFIG" || echo 'Port 22' >> "$SSHD_CONFIG"
 grep -q '^PubkeyAuthentication yes$' "$SSHD_CONFIG" || echo 'PubkeyAuthentication yes' >> "$SSHD_CONFIG"
 grep -q '^PasswordAuthentication no$' "$SSHD_CONFIG" || echo 'PasswordAuthentication no' >> "$SSHD_CONFIG"
 grep -q '^KbdInteractiveAuthentication no$' "$SSHD_CONFIG" || echo 'KbdInteractiveAuthentication no' >> "$SSHD_CONFIG"
